@@ -7,6 +7,8 @@
 <body>
     <h1 align="center">게시판 메인 화면</h1>
     <main>
+        <a href="/board/post">작성</a>
+        <div th:text="${posts}"></div>
         <table border="1" width="800" align="center">
             <thead>
                 <tr>
@@ -17,7 +19,14 @@
                 </tr>
             </thead>
             <tbody>
-
+                <tr th:each="post,stat: ${posts}">
+                    <td th:text="${stat.count}">1</td>
+                    <td>
+                        <a th:href="@{'/board/post/' + ${post.no}}" th:text="${post.title}"></a>
+                    </td>
+                    <td th:text="${post.userId}">111</td>
+                    <td th:text="${#temporals.format(post.postDate, 'yyyy-MM-dd')}">333</td>
+                </tr>
             </tbody>
         </table>
     </main>

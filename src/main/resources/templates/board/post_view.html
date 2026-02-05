@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Board - Post(view)</title>
+</head>
+<body>
+    <h1>게시물 Viewer</h1>
+    <main>
+        <div> <b>제목:</b><span th:text="${post.no}">여기는no옴^^</span> <br> </div>
+        <div> <b>작성자:</b><span th:text="${post.userId}"></span> <br> </div>
+        <div> <b>작성일자:</b><span th:text="${post.postDate}"></span> <br> </div>
+        <div> <b>내용:</b><span th:text="${post.content}"></span> <br> </div>
+        <a href="/board/post/update">수정하기</a>
+        <a th:href="'/board/post/delete/' + ${post.no}">삭제하기</a>
+    </main>
+</body>
+</html>
