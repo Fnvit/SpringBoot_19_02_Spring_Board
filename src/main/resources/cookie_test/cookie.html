@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1>쿠키 연습용ㅎ.ㅎ</h1>
+<!--    <iframe src="popup.html"></iframe>-->
+</body>
+</html>
+<script>
+    // 현재 사이트에 존재하는 모든 쿠키 값을 가져옴
+    const cookies = document.cookie;
+
+    // 모든 쿠키 값을 띄어쓰기 기준으로 나눠서 순회
+    for(const cookie of cookies.split(' ')){
+        const [key, value] = cookie.split('=');
+        // popup 이라는 key 가 존재하지 않거나, value 값이 false아니면, open하면 된다.
+        if (key === 'popup'){
+            if (value.replace(';', '') !== 'false'){
+                window.open('popup.html', 'popup', 'popup,width=300,height=500');
+            }
+        }
+    }
+
+
+    // const date = new Date();
+    // date.setDate(date.getDate() + 1);
+    // date.setHours(date.getHours() + 1);
+    // console.log(date);
+    // document.cookie = 'koreait=hi;domain=localhost;path=/;expires=' + date.toString();
+    document.cookie = 'japanit=bye'
+    // const cookie = document.cookie;
+    // console.log(cookie);
+
+
+
+</script>
+
+
+
+
+
+
+
+
+

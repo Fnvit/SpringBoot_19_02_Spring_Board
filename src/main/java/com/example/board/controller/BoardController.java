@@ -3,6 +3,8 @@ package com.example.board.controller;
 import com.example.board.dao.repository.PostRepository;
 import com.example.board.dao.repository.UserRepository;
 import com.example.board.domain.entity.PostEntity;
+import com.example.board.domain.entity.UserEntity;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,11 +18,22 @@ import java.util.List;
 public class BoardController {
     @Autowired
     PostRepository postRepository;
-    @Autowired
-    private UserRepository userRepository;
 
     @GetMapping
-    public String get_main(Model model) {
+    public String get_main(
+            Model model,
+            HttpSession session
+    ) {
+        var sessionUser = session.getAttribute("user");
+        // null 이라는 것은 login(post)안하고 왔네? 아님 로그인 실패했네?
+        if(sessionUser == null) {
+            // 로그인 창으로 가라
+            return "redirect:/user/login";
+        }
+        // 로그인이 제대로 되어있네. 그러면 session에 binding되어있는 user 가져와야겠다.
+//        UserEntity user = (UserEntity) sessionUser;
+        // 화면에 유저의 정보를 보여주기 위해 유저를 binding한다
+        // model.addAttribute("user", user);
         // DB조회
         Iterable<PostEntity> posts = postRepository.findAllByOrderByNoDesc();
         System.out.println(posts);
@@ -67,6 +80,7 @@ public class BoardController {
 
     @GetMapping("/post/delete/{no}")
     public String delete_post(@PathVariable Integer no) {
+        // 로그인된 유저가 이 게시물의 주인이 맞는지 확인 후 삭제하는 로직이 필요하다!
         postRepository.deleteById(no);
         return "redirect:/board";
     }

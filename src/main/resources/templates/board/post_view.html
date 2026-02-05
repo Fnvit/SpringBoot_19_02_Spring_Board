@@ -11,8 +11,8 @@
         <div> <b>작성자:</b><span th:text="${post.userId}"></span> <br> </div>
         <div> <b>작성일자:</b><span th:text="${post.postDate}"></span> <br> </div>
         <div> <b>내용:</b><span th:text="${post.content}"></span> <br> </div>
-        <a href="/board/post/update">수정하기</a>
-        <a th:href="'/board/post/delete/' + ${post.no}">삭제하기</a>
+        <a th:if="${post.userId == session.user.id}" href="/board/post/update">수정하기</a>
+        <a th:if="${post.userId == session.user.id}" th:href="'/board/post/delete/' + ${post.no}">삭제하기</a>
     </main>
 </body>
 </html>

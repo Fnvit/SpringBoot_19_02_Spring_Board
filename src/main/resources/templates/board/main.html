@@ -6,6 +6,7 @@
 </head>
 <body>
     <h1 align="center">게시판 메인 화면</h1>
+    <h4>[[${session.user.nickname}]]님! 안녕하세요^0^</h4>
     <main>
         <a href="/board/post">작성</a>
         <div th:text="${posts}"></div>
@@ -25,7 +26,7 @@
                         <a th:href="@{'/board/post/' + ${post.no}}" th:text="${post.title}"></a>
                     </td>
                     <td th:text="${post.userId}">111</td>
-                    <td th:text="${#temporals.format(post.postDate, 'yyyy-MM-dd')}">333</td>
+                    <td th:text="${#temporals.format(post.postDate, 'yyyy-MM-dd HH:mm:ss')}">333</td>
                 </tr>
             </tbody>
         </table>

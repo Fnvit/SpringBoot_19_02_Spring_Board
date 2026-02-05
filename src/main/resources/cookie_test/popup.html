@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1>여기는 팝업창^-^</h1>
+
+    오늘 하루 열지 않기: <input type="checkbox">
+</body>
+</html>
+<script>
+    const checkbox = document.querySelector('input');
+    checkbox.onclick = () => {
+        const date = new Date();
+        date.setDate(date.getDate() + 1);
+        // popup 값을 false로 설정한 cookie를 생성한다
+        document.cookie = `popup=false;expires=${date}`;
+        window.close(); // 자신의 창을 닫는다
+    }
+</script>
+
+
+
+
+
+
+
