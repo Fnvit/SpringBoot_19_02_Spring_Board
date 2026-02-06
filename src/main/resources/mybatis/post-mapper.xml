@@ -22,4 +22,9 @@
         INSERT INTO post (no, user_id, title, content, post_date)
         VALUES (#{no}, #{user.id}, #{title}, #{content}, #{postDate})
     </insert>
+    
+    <insert id="insertFile">
+        INSERT INTO file (uuid, name, post_no) 
+        VALUES (#{uuid}, #{name}, NULL)
+    </insert>
 </mapper>

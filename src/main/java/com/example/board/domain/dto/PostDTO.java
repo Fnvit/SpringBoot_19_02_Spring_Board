@@ -17,5 +17,11 @@ public class PostDTO {
     private String title;
     private String content;
     private UserDTO user;
+    private FileDTO file;
     private LocalDateTime postDate;
+
+
+
+
+
 }

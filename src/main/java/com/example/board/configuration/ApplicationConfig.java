@@ -12,7 +12,7 @@ public class ApplicationConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         AuthenticationInterceptor authenticationInterceptor = new AuthenticationInterceptor();
-        registry.addInterceptor(authenticationInterceptor)
-                .addPathPatterns("/board/**");
+//        registry.addInterceptor(authenticationInterceptor)
+//                .addPathPatterns("/board/**");
     }
 }

@@ -3,17 +3,22 @@ package com.example.board.controller;
 import com.example.board.dao.mapper.PostMapper;
 import com.example.board.dao.repository.PostRepository;
 import com.example.board.dao.repository.UserRepository;
+import com.example.board.domain.dto.FileDTO;
 import com.example.board.domain.dto.PostDTO;
 import com.example.board.domain.entity.PostEntity;
 import com.example.board.domain.entity.UserEntity;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/board")
@@ -88,6 +93,62 @@ public class BoardController {
         postRepository.deleteById(no);
         return "redirect:/board";
     }
+
+
+    /**************** 파일 연습 **************************/
+    File basedir =  new File("C:\\Users\\Administrator\\Desktop\\KSW\\SpringBoard\\files");
+    @PostMapping("/file")
+    public String post_file(List<MultipartFile> files) throws IOException {
+        for (MultipartFile file : files) {
+            String fileName = file.getOriginalFilename();
+            byte[] bytes = file.getBytes();
+            if(bytes.length != 0){
+                File f = new File(basedir, fileName);
+                file.transferTo(f);
+            }
+            System.out.println("fileName: " + fileName);
+            System.out.println("bytes.length: " + bytes.length);
+        }
+        return "redirect:/board/post";
+    }
+
+    @PostMapping("/file_post")
+    public String post_file(MultipartFile file) throws IOException {
+        String uuid = UUID.randomUUID().toString();
+        String fileName = file.getOriginalFilename();
+        byte[] bytes = file.getBytes();
+        if(bytes.length != 0){
+            // 서버에 저장할 때는 uuid + _ + 파일명
+            String cFileName = uuid + "_" + fileName;
+            File f = new File(basedir, cFileName);
+            file.transferTo(f);
+            // 서버 컴퓨터에 파일이 저장되었다면 DB에도 내용을 저장
+            FileDTO fileDTO = FileDTO.builder().uuid(uuid).name(fileName).build();
+            postMapper.insertFile(fileDTO);
+        }
+        System.out.println("fileName: " + fileName);
+        System.out.println("bytes.length: " + bytes.length);
+
+        return "redirect:/board/post";
+    }
+
+    @GetMapping("/file_view")
+    public void get_file_view(HttpServletResponse response) throws Exception{
+        FileDTO file = postMapper.selectFile();
+        String cFileName = file.getUuid() + "_" + file.getName();
+        File f = new File(basedir, cFileName);
+        FileInputStream in = new FileInputStream(f);
+        byte[] bytes = in.readAllBytes();
+
+        response.setContentType("application/octet-stream");
+        response.setHeader("Content-Disposition", "attachment; filename=" + file.getName());
+        OutputStream out = response.getOutputStream();
+        out.write(bytes);
+    }
+
+
+
+
 
 
 
