@@ -25,7 +25,7 @@
                     <td>
                         <a th:href="@{'/board/post/' + ${post.no}}" th:text="${post.title}"></a>
                     </td>
-                    <td th:text="${post.userId}">111</td>
+                    <td th:text="${post.user.nickname}">111</td>
                     <td th:text="${#temporals.format(post.postDate, 'yyyy-MM-dd HH:mm:ss')}">333</td>
                 </tr>
             </tbody>

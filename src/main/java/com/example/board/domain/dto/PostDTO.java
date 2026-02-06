@@ -1,22 +1,21 @@
-package com.example.board.domain.entity;
+package com.example.board.domain.dto;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+@Setter
 @Getter
 @ToString
-@NoArgsConstructor
+@Builder
 @AllArgsConstructor
-@Table("post")
-public class PostEntity {
-    @Id
+@NoArgsConstructor
+public class PostDTO {
     private Integer no;
     private String title;
     private String content;
-    private String userId;
+    private UserDTO user;
     private LocalDateTime postDate;
 }

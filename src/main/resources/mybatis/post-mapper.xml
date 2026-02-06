@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.board.dao.mapper.PostMapper">
+    <resultMap id="PostWithUserMap" type="com.example.board.domain.dto.PostDTO" autoMapping="true">
+        <id property="no" column="no" />
+        <association property="user" javaType="com.example.board.domain.dto.UserDTO">
+            <id property="id" column="id" />
+            <result property="nickname" column="nickname" />
+        </association>
+    </resultMap>
+
+    <select id="selectAllPost" resultType="com.example.board.domain.dto.PostDTO" resultMap="PostWithUserMap">
+        SELECT * FROM post
+            INNER JOIN user
+            ON post.user_id = user.id
+        ORDER BY post.no DESC
+    </select>
+
+    <insert id="insertPost">
+        INSERT INTO post (no, user_id, title, content, post_date)
+        VALUES (#{no}, #{user.id}, #{title}, #{content}, #{postDate})
+    </insert>
+</mapper>
