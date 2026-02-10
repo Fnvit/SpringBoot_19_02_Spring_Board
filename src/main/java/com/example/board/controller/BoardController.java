@@ -5,8 +5,10 @@ import com.example.board.dao.repository.PostRepository;
 import com.example.board.dao.repository.UserRepository;
 import com.example.board.domain.dto.FileDTO;
 import com.example.board.domain.dto.PostDTO;
+import com.example.board.domain.dto.UserDTO;
 import com.example.board.domain.entity.PostEntity;
 import com.example.board.domain.entity.UserEntity;
+import com.example.board.service.BoardService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -25,8 +29,8 @@ import java.util.UUID;
 public class BoardController {
     @Autowired PostRepository postRepository;
     @Autowired PostMapper postMapper;
-    @Autowired
-    private UserRepository userRepository;
+    @Autowired BoardService boardService;
+    @Autowired private UserRepository userRepository;
 
     @GetMapping
     public String get_main(
@@ -60,13 +64,13 @@ public class BoardController {
             @PathVariable Integer no,
             Model model
     ) {
-        var optionalPost = postRepository.findById(no);
-        if (optionalPost.isPresent()) {
-            var post = optionalPost.get();
-            model.addAttribute("post", post);
-        }
-
-
+        var post = postMapper.selectPostByNo(no);
+        model.addAttribute("post", post);
+//        var optionalPost = postRepository.findById(no);
+//        if (optionalPost.isPresent()) {
+//            var post = optionalPost.get();
+//        model.addAttribute("post", post);
+//        }
         return "board/post_view";
     }
 
@@ -80,11 +84,13 @@ public class BoardController {
     @PostMapping("/post")
     public String post_post(PostDTO post) {
         System.out.println(post);
-
-        post.setPostDate(LocalDateTime.now());
-        postMapper.insertPost(post);
+        System.out.println(post.getFile());
+        // post 내용 채우기 (유저 사용될때 유저id 넣어야함)
+        post.setUser(UserDTO.builder().id("TESTER").build());
+        // post를 추가함
+        boardService.add_post(post);
         // 메서드가 끝나면(게시물 작성이 끝났다면_게시판으로 이동해라)
-        return "redirect:/board";
+        return "redirect:/board/post";
     }
 
     @GetMapping("/post/delete/{no}")
@@ -92,6 +98,22 @@ public class BoardController {
         // 로그인된 유저가 이 게시물의 주인이 맞는지 확인 후 삭제하는 로직이 필요하다!
         postRepository.deleteById(no);
         return "redirect:/board";
+    }
+
+    @GetMapping("/file/{uuid}")
+    public void get_file(
+            HttpServletResponse response,
+            @PathVariable String uuid
+    ) throws IOException {
+        // 1. DB에서 실제 파일을 조회한 후, 파일 data와 파일의 이름을 가져온다.
+        FileDTO fileDTO = boardService.get_file(uuid);
+        // 2. uuid가 붙지 않은 실제 업로드된 파일이름을 url encoding 한다
+        String fileName = URLEncoder.encode(fileDTO.getName(), StandardCharsets.UTF_8);
+        // 3. response에 파일 데이터를 포함시킨다
+        response.setContentType("application/octet-stream");
+        response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
+        // 4. 실제 파일 내용을 응답에 write 한다
+        response.getOutputStream().write(fileDTO.getData());
     }
 
 
@@ -124,7 +146,7 @@ public class BoardController {
             file.transferTo(f);
             // 서버 컴퓨터에 파일이 저장되었다면 DB에도 내용을 저장
             FileDTO fileDTO = FileDTO.builder().uuid(uuid).name(fileName).build();
-            postMapper.insertFile(fileDTO);
+//            postMapper.insertFile(fileDTO);
         }
         System.out.println("fileName: " + fileName);
         System.out.println("bytes.length: " + bytes.length);

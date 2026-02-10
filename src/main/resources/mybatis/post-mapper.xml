@@ -11,6 +11,13 @@
         </association>
     </resultMap>
 
+    <resultMap id="PostWithFileMap" type="com.example.board.domain.dto.PostDTO" autoMapping="true">
+        <id property="no" column="no" />
+        <association property="file" javaType="com.example.board.domain.dto.FileDTO" autoMapping="true">
+            <id property="uuid" column="uuid" />
+        </association>
+    </resultMap>
+
     <select id="selectAllPost" resultType="com.example.board.domain.dto.PostDTO" resultMap="PostWithUserMap">
         SELECT * FROM post
             INNER JOIN user
@@ -18,13 +25,26 @@
         ORDER BY post.no DESC
     </select>
 
+    <select id="selectPostByNo" resultType="com.example.board.domain.dto.PostDTO" resultMap="PostWithFileMap">
+        SELECT * FROM post
+            LEFT OUTER JOIN file
+            ON post.no = file.post_no
+        WHERE no = #{no}
+    </select>
+
+
+
     <insert id="insertPost">
+        <selectKey keyProperty="no" order="AFTER" resultType="int">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
         INSERT INTO post (no, user_id, title, content, post_date)
-        VALUES (#{no}, #{user.id}, #{title}, #{content}, #{postDate})
+        VALUES (NULL, #{user.id}, #{title}, #{content}, NOW())
     </insert>
-    
+
+
     <insert id="insertFile">
-        INSERT INTO file (uuid, name, post_no) 
-        VALUES (#{uuid}, #{name}, NULL)
+        INSERT INTO file (uuid, name, post_no)
+        VALUES (#{file.uuid}, #{file.name}, #{no})
     </insert>
 </mapper>

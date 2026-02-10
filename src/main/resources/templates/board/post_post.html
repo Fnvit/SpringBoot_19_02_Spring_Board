@@ -7,14 +7,13 @@
 <body>
     <h1>게시물 작성</h1>
     <main>
-        <form action="/board/file_post" method="post" enctype="multipart/form-data">
+        <form action="/board/post" method="post" enctype="multipart/form-data">
             제목: <input type="text" name="title"> <br>
             작성자: <input type="text" name="userId"> <br>
 
             파일: <input type="file" name="file"> <br>
 
             내용: <textarea name="content"></textarea> <br>
-            <img src="/board/file_view" alt="">
             <button>게시하기</button>
         </form>
     </main>

@@ -8,11 +8,12 @@
     <h1>게시물 Viewer</h1>
     <main>
         <div> <b>제목:</b><span th:text="${post.no}">여기는no옴^^</span> <br> </div>
-        <div> <b>작성자:</b><span th:text="${post.userId}"></span> <br> </div>
+<!--        <div> <b>작성자:</b><span th:text="${post.userId}"></span> <br> </div>-->
         <div> <b>작성일자:</b><span th:text="${post.postDate}"></span> <br> </div>
+        <div> <b>파일:</b><a th:href="'/board/file/' + ${post.file.uuid}" th:text="${post.file.name}">다운로드</a> </div>
         <div> <b>내용:</b><span th:text="${post.content}"></span> <br> </div>
-        <a th:if="${post.userId == session.user.id}" href="/board/post/update">수정하기</a>
-        <a th:if="${post.userId == session.user.id}" th:href="'/board/post/delete/' + ${post.no}">삭제하기</a>
+<!--        <a th:if="${post.userId == session.user.id}" href="/board/post/update">수정하기</a>-->
+<!--        <a th:if="${post.userId == session.user.id}" th:href="'/board/post/delete/' + ${post.no}">삭제하기</a>-->
     </main>
 </body>
 </html>

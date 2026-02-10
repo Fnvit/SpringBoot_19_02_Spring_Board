@@ -19,9 +19,4 @@ public class PostDTO {
     private UserDTO user;
     private FileDTO file;
     private LocalDateTime postDate;
-
-
-
-
-
 }
